@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Movies } from './models/movies.model';
 import { Repository } from 'typeorm';
 import { CreateMovieDto } from './dto/create-movie.dto';
+import { MovieResponse } from './response/movie-response.interface';
 
 @Injectable()
 export class MoviesService {
@@ -20,7 +21,26 @@ export class MoviesService {
         }
         const newMovie = this.moviesRepository.create(createMovieDto);
         await this.moviesRepository.save(newMovie);
+
         return newMovie;
+    }
+    // 영화 단일 조회
+    async getMovieById(id: number): Promise<MovieResponse>{
+        const movie = await this.moviesRepository.findOne({ where: { id: id } });
+
+        // 존재하지 않는 영화를 조회할 경우의 예외를 처리
+        if(!movie){
+            throw new NotFoundException("존재하지 않는 영화입니다!");
+        }
+
+        return {
+            title: movie.title,
+            genre: movie.genre,
+            releaseDate: movie.releaseDate,
+            endDate: movie.endDate,
+            isPlaying: movie.isPlaying,
+          };
+
     }
 
 

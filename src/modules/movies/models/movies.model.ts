@@ -24,3 +24,5 @@ export class Movies extends BaseEntity {
   isPlaying: boolean;
 }
 
+
+
