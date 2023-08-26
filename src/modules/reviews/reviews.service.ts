@@ -16,7 +16,7 @@ export class ReviewsService {
     ) {}
 
     // 리뷰 등록
-    async createReview(createReviewDto: CreateReviewDto){
+    async createReview(createReviewDto: CreateReviewDto): Promise<Reviews>{
         const { movieId } = createReviewDto;
         const movie = await this.moviesRepository.findOne({ where: { id: movieId } });
 
