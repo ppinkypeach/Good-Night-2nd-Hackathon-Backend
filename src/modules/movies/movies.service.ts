@@ -70,7 +70,7 @@ export class MoviesService {
     }
 
     //영화 목록 조회
-    async getMovieAll(genre?: Genre, isPlaying?: Boolean){
+    async getMovieAll(genre?: Genre, isPlaying?: Boolean): Promise<Movies[]>{
         
         const queryBuilder = this.moviesRepository.createQueryBuilder('movie');
 
