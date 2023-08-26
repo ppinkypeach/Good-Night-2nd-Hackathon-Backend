@@ -26,7 +26,8 @@ export class MoviesService {
     }
     // 영화 단일 조회
     async getMovieById(id: number): Promise<MovieResponse>{
-        const movie = await this.moviesRepository.findOne({ where: { id: id } });
+        // 삭제 처리된 영화는 조회하지 않도록 처리
+        const movie = await this.moviesRepository.findOne({ where: { id: id, deletedAt: null} });
 
         // 존재하지 않는 영화를 조회할 경우의 예외를 처리
         if(!movie){
@@ -43,6 +44,12 @@ export class MoviesService {
 
     }
 
+       // 영화 삭제
+       async deleteMovie(id: number){
+        const movie = this.getMovieById(id);
+        
+        await this.moviesRepository.softDelete
+    }
 
 }
 
