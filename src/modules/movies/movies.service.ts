@@ -69,10 +69,24 @@ export class MoviesService {
         
     }
 
-    // //영화 목록 조회
-    // async getMovieAll(genre: Genre, isPlaying: Boolean){
+    //영화 목록 조회
+    async getMovieAll(genre?: Genre, isPlaying?: Boolean){
+        
+        const queryBuilder = this.moviesRepository.createQueryBuilder('movie');
 
-    // }
+        if(genre){
+            queryBuilder.andWhere('movie.genre = :genre', { genre });
+        }
+
+        if (typeof isPlaying !== 'undefined') {
+            queryBuilder.andWhere('movie.isPlaying = :isPlaying', { isPlaying: isPlaying ? 1 : 0 });
+          }
+        
+        queryBuilder.orderBy('movie.releaseDate', 'ASC');
+
+        return await queryBuilder.getMany();
+
+    }
 
 }
 

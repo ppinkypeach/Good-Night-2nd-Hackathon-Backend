@@ -20,7 +20,13 @@ export class Movies extends BaseEntity {
   @Column({ type: 'date' })
   endDate: Date;
 
-  @Column({ type: 'boolean' })
+  @Column({
+    type: 'tinyint',
+    transformer: {
+      to: (value: boolean) => value ? 1 : 0,
+      from: (value: number) => value === 1
+    }
+  })
   isPlaying: boolean;
 }
 

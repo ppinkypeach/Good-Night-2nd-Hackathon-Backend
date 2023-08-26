@@ -1,7 +1,8 @@
-import { Body, Controller, Param, Post, Get, Delete, Patch } from '@nestjs/common';
+import { Body, Controller, Param, Post, Get, Delete, Patch, Query } from '@nestjs/common';
 import { MoviesService } from './movies.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { Genre } from './enums/genre.enum';
 
 @Controller('movies')
 export class MoviesController {
@@ -31,4 +32,12 @@ export class MoviesController {
     updtateMovie(@Param('id') id: number, @Body() updateMovieDto: UpdateMovieDto){
         return this.moviesService.updateMovie(id, updateMovieDto);
     }
+
+    // 영화 목록 조회
+    @Get()
+    getMovieAll(@Query('genre') genre?: Genre, @Query('isPlaying') isPlaying?: string) {
+        const isPlayingBool = isPlaying === 'true' ? true : isPlaying === 'false' ? false : undefined;
+        return this.moviesService.getMovieAll(genre, isPlayingBool);
+    }
+
 }
