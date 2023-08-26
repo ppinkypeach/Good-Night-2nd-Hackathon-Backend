@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { MovieResponse } from './response/movie-response.interface';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { Genre } from './enums/genre.enum';
 
 @Injectable()
 export class MoviesService {
@@ -25,6 +26,7 @@ export class MoviesService {
 
         return newMovie;
     }
+
     // 영화 단일 조회
     async getMovieById(id: number): Promise<MovieResponse> {
         // 삭제 처리된 영화는 조회하지 않도록 처리
@@ -57,15 +59,20 @@ export class MoviesService {
     }
 
     // 영화 수정
-    async updateMovie(id: number, updateMovieDto: UpdateMovieDto) {
+    async updateMovie(id: number, updateMovieDto: UpdateMovieDto): Promise<MovieResponse> {
 
-        let movie = await this.getMovieById(id);
+        let movie = await this.getMovieById(id)
         await this.moviesRepository.update(id, updateMovieDto);
         const updatedMovie = await this.getMovieById(id);
 
         return updatedMovie;
         
     }
+
+    // //영화 목록 조회
+    // async getMovieAll(genre: Genre, isPlaying: Boolean){
+
+    // }
 
 }
 
