@@ -7,7 +7,7 @@ import { Reviews } from '../../modules/reviews/models/reviews.model';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: 'db',
       port: 3306,
       username: 'heketon',
       password: '0716',
