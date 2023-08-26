@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Body, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Movies } from './models/movies.model';
 import { Repository } from 'typeorm';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { MovieResponse } from './response/movie-response.interface';
+import { UpdateMovieDto } from './dto/update-movie.dto';
 
 @Injectable()
 export class MoviesService {
@@ -14,7 +15,7 @@ export class MoviesService {
     ) {}
 
     // 영화 등록
-    async createMovie(createMovieDto: CreateMovieDto): Promise<Movies>{
+    async createMovie(createMovieDto: CreateMovieDto): Promise<Movies> {
         // 제목을 null로 등록하려고 할 때 예외를 처리
         if(!createMovieDto.title){
             throw new NotFoundException("제목은 입력해주셔야 합니다!");
@@ -25,7 +26,7 @@ export class MoviesService {
         return newMovie;
     }
     // 영화 단일 조회
-    async getMovieById(id: number): Promise<MovieResponse>{
+    async getMovieById(id: number): Promise<MovieResponse> {
         // 삭제 처리된 영화는 조회하지 않도록 처리
         const movie = await this.moviesRepository.findOne({ where: { id: id, deletedAt: null} });
 
@@ -44,11 +45,26 @@ export class MoviesService {
 
     }
 
-       // 영화 삭제
-       async deleteMovie(id: number){
-        const movie = this.getMovieById(id);
+    // 영화 삭제
+    async deleteMovie(id: number): Promise<void>{
+
+        await this.getMovieById(id);
+        const deleteMovie = await this.moviesRepository.softDelete(id);
+
+        if(deleteMovie.affected === 0) {
+            throw new NotFoundException("영화 삭제가 제대로 되지 않았어요!");
+        }
+    }
+
+    // 영화 수정
+    async updateMovie(id: number, updateMovieDto: UpdateMovieDto) {
+
+        let movie = await this.getMovieById(id);
+        await this.moviesRepository.update(id, updateMovieDto);
+        const updatedMovie = await this.getMovieById(id);
+
+        return updatedMovie;
         
-        await this.moviesRepository.softDelete
     }
 
 }
